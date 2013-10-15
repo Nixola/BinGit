@@ -13,15 +13,6 @@ end
 math.randomseed(os.time())
 math.random();math.random();math.random();math.random();math.random();
 
-function shuffled(tab)
-	local n, order, res = #tab, {}, {}
-	 
-	for i=1,n do order[i] = { rnd = math.random(), idx = i } end
-	table.sort(order, function(a,b) return a.rnd < b.rnd end)
-	for i=1,n do res[i] = tab[order[i].idx] end
-	return res
-end
-
 local f = io.popen "find -L ~/Music -type f -name \*.mp3"
 t = {}
 
@@ -36,9 +27,19 @@ end
 
 f:close()
 
-t = shuffled(t)
+i = 0
+while true do
 
-for i, v in ipairs(t) do
+	local rnd = io.open('/tmp/music.shuffle', 'r')
+	if rnd then
+		i = math.random(#t)
+	else
+		i = i%(#t+1)+1
+	end
+
+--	print(i)
+
+	local v = t[i]
 
 	local f = io.open("/tmp/music.running", 'r')
 	if not f then break end
@@ -56,7 +57,6 @@ for i, v in ipairs(t) do
 	Ftitle:close()
 
 	local str = string.format('notify-send -t 1000 "Now playing:" "\n%s\n%s\n%s"',title, author, album)
-	print(str, album, author, title)
 	os.execute(str)
 	os.execute(string.format('mpg123 "%s"', v))
 
