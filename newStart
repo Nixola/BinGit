@@ -1,0 +1,20 @@
+if [ -f /tmp/music.pid ]; then
+	kill `cat /tmp/music.pid`
+	rm /tmp/music.pid
+else
+	echo "$$" > /tmp/music.pid
+	for filePath in "$(find -L ~/Music -type f -name \*.mp3 | shuffle.lua)"
+	do
+		fileName="${filePath%%.*}"
+		Ralbum="$(id3v2 -R \"$filePath\" | grep TALB)"
+		Rauthor="$(id3v2 -R \"$filePath\" | grep TPE1)"
+		Rtitle="$(id3v2 -R \"$filePath\" | grep TIT2)"
+
+		album="${Ralbum#: }"
+		author="${Rauthor#: }"
+		title="${Rtitle#: }"
+
+		notify-send -time 5000 "$title" "$author: $album"
+		mpg123 "$filePath"
+	done
+fi

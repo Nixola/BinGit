@@ -1,0 +1,4 @@
+if pgrep mpg123
+	then killall mpg123; notify-send -t 1000 "Stop"
+else  notify-send -t 1000 "Play"; mpg123 ~/Music/Blind -B -Z
+fi
