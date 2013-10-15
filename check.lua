@@ -1,3 +1,4 @@
+#!/usr/bin/lua
 local f = io.open('/tmp/music.running', 'r')
 local str
 if not f then
@@ -6,4 +7,4 @@ else
 	local v = f:read '*a'
 	str = '"Now playing:" "'..v..'"'
 end
-os.execute('notify-send -t 1000 '..str)
+os.execute('notify-send --expire-time 2000 '..str)

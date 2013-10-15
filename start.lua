@@ -4,11 +4,9 @@ if f then
 	os.execute("rm /tmp/music.running")
 	os.execute "next"
 	return
-else
-	f = io.open("/tmp/music.running", 'w')
-	f:write ' '
-	f:close()
 end
+
+local first = true
 
 math.randomseed(os.time())
 math.random();math.random();math.random();math.random();math.random();
@@ -42,7 +40,8 @@ while true do
 	local v = t[i]
 
 	local f = io.open("/tmp/music.running", 'r')
-	if not f then break end
+	if not f and not first then break end
+	first = nil
 
 	local Falbum = io.popen('id3v2 -R "'..v..'" | grep TALB')
 	local Fauthor = io.popen('id3v2 -R "'..v..'" | grep TPE1')
@@ -52,12 +51,22 @@ while true do
 	local author = (Fauthor:read '*a'):sub(7, -1)
 	local title = (Ftitle:read '*a'):sub(7, -1)
 
+	local f = io.open("/tmp/music.running", 'w')
+	f:write('\n')
+	f:write(title)
+	f:write('\n')
+	f:write(author)
+	f:write('\n')
+	f:write(album)
+	f:close()
+
 	Falbum:close()
 	Fauthor:close()
 	Ftitle:close()
 
-	local str = string.format('notify-send -t 1000 "Now playing:" "\n%s\n%s\n%s"',title, author, album)
-	os.execute(str)
+	--local str = string.format('notify-send -t 1000 "Now playing:" "\n%s\n%s\n%s"',title, author, album)
+	--os.execute(str)
+	os.execute 'check.lua'
 	os.execute(string.format('mpg123 "%s"', v))
 
 end
