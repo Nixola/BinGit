@@ -7,4 +7,4 @@ else
 	local v = f:read '*a'
 	str = '"Now playing:" "'..v..'"'
 end
-os.execute('notify-send --expire-time 2000 '..str)
+os.execute('notify-send --expire-time 3500 '..str)

@@ -1,3 +1,4 @@
+#!/usr/bin/lua
 local args = {...}
 local param = args[1]
 

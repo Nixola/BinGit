@@ -39,6 +39,8 @@ while true do
 
 	local v = t[i]
 
+	local filename = v:match ".+/(.-)%.mp3$"
+
 	local f = io.open("/tmp/music.running", 'r')
 	if not f and not first then break end
 	first = nil
@@ -53,7 +55,7 @@ while true do
 
 	local f = io.open("/tmp/music.running", 'w')
 	f:write('\n')
-	f:write(title)
+	f:write(title ~= '' and title or filename)
 	f:write('\n')
 	f:write(author)
 	f:write('\n')
